@@ -16,3 +16,30 @@ truffle init
 
 然后运行
 truffle migrate
+
+
+web3测试
+const { Web3 } = require('web3'); // 注意这里的导入方式
+const contract = require('./build/contracts/Ledger.json');
+
+// 使用 Web3 的构造函数来连接节点
+const web3 = new Web3("http://127.0.0.1:8545"); // 连接本地链
+const account = "0xbbEb2Cff1282a18382bad2d4C8Bc5531804B58B8"; // 使用 Ganache 上的测试钱包地址
+const contractAddress = "0x3db3a1a0e6f0125195a9e2bdb5135a78ae5d20e0"; // 通过 ganache 部署后的合约地址
+
+const myContract = new web3.eth.Contract(contract.abi, contractAddress);
+
+async function test() {
+  try {
+    // 调用 deposit 方法，传递 ETH
+    await myContract.methods.deposit().send({ from: account, value: web3.utils.toWei("1", "ether") });
+
+    // 调用余额方法，获取账户的余额
+    const balance = await myContract.methods.balances(account).call();
+    console.log("余额:", web3.utils.fromWei(balance, "ether"), "ETH");
+  } catch (error) {
+    console.error("发生错误:", error);
+  }
+}
+
+test();
