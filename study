@@ -1,1 +1,18 @@
-test
+第一次运行智能合约步骤
+1.npm install -g truffle
+2.npm install -g ganache-cli
+3.mkdir myContract && cd myContract
+truffle init
+4.truffle compile
+5.ganache-cli
+
+然后在 migrations/2_deploy_contracts.js 里加上：
+
+  const Ledger = artifacts.require("Ledger");
+  
+  module.exports = function (deployer) {
+    deployer.deploy(Ledger);
+  };
+
+然后运行
+truffle migrate
